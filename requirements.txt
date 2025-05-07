@@ -1,4 +1,6 @@
-beautifulsoup4
+streamlit 
 requests
-google-api-python-client
-Pillow
+bs4 import BeautifulSoup
+re
+from PIL import Image
+from googleapiclient.discovery import build

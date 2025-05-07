@@ -12,27 +12,70 @@ def job_search_section(job_query=None):
     if not job_query:
         job_query = st.text_input("Enter job keyword (e.g. 'police', 'railway', '12th pass')")
 
-    if st.button("Search Job"):
+    if st.button("Search Job") or job_query:
         if not job_query:
             st.warning("Please enter a keyword to search.")
             return
+            
         try:
             url = "https://www.sarkariresult.com/"
-            r = requests.get(url)
-            soup = BeautifulSoup(r.text, 'html.parser')
-            links = soup.find_all('a', href=True)
-            results = [a for a in links if job_query.lower() in a.text.lower()]
-            if results:
-                for link in results:
-                    link_text = link.text.strip()
-                    link_url = link['href']
-                    if not link_url.startswith('http'):
-                        link_url = "https://www.sarkariresult.com/" + link_url
-                    st.markdown(f"- [{link_text}]({link_url})")
-            else:
-                st.warning("No results found.")
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            
+            with st.spinner(f"Searching for '{job_query}' on Sarkari Result..."):
+                r = requests.get(url, headers=headers, timeout=10)
+                r.raise_for_status()
+                
+                soup = BeautifulSoup(r.content, 'html.parser')
+                
+                # Search in different sections of the page
+                sections = [
+                    ('latestjobs', 'div', 'latestjobs'),
+                    ('resultblock', 'div', 'resultblock'),
+                    ('post', 'div', 'post'),
+                    ('menu', 'div', 'menu')
+                ]
+                
+                results = []
+                for section_id, tag, class_name in sections:
+                    section = soup.find(tag, id=section_id) or soup.find(tag, class_=class_name)
+                    if section:
+                        links = section.find_all('a', href=True)
+                        results.extend(
+                            a for a in links 
+                            if job_query.lower() in a.text.lower() and 
+                            not any(x in a.text.lower() for x in ['answer key', 'admit card', 'syllabus'])
+                        )
+                
+                if results:
+                    st.success(f"Found {len(results)} matching jobs:")
+                    for link in results[:10]:  # Limit to 10 results
+                        link_text = re.sub(r'\s+', ' ', link.text).strip()
+                        link_url = link['href']
+                        
+                        if not link_url.startswith(('http://', 'https://')):
+                            if link_url.startswith('/'):
+                                link_url = "https://www.sarkariresult.com" + link_url
+                            else:
+                                link_url = "https://www.sarkariresult.com/" + link_url
+                                
+                        st.markdown(f"🔹 [{link_text}]({link_url})")
+                else:
+                    st.warning(f"No job openings found for '{job_query}'. Try different keywords like:")
+                    st.markdown("""
+                    - Police
+                    - Railway
+                    - Clerk
+                    - 12th pass
+                    - Army
+                    - SSC
+                    """)
+                    
+        except requests.exceptions.RequestException as e:
+            st.error(f"Failed to connect to Sarkari Result. Error: {e}")
         except Exception as e:
-            st.error(f"Error: {e}")
+            st.error(f"An error occurred: {e}")
 
 # --- Dashboard Page ---
 def dashboard():

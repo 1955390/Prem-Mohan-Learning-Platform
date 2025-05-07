@@ -23,25 +23,30 @@ def job_search_section(job_query=None):
                               "Chrome/122.0.0.0 Safari/537.36"
             }
 
-            # Replace with a valid India-based proxy (http or https)
-            proxies = {
-                "http": "http://103.146.176.133:80"
-,
-                "https": "https://103.146.176.133:80"
-
-            }
-
             with st.spinner(f"Searching for '{job_query}' on Sarkari Result..."):
-                response = requests.get(url, headers=headers, proxies=proxies, timeout=10)
-                response.raise_for_status()
+                # Try without proxies first
+                try:
+                    response = requests.get(url, headers=headers, timeout=10)
+                    response.raise_for_status()
+                except:
+                    # If direct request fails, try with proxies
+                    proxies = {
+                        "http": "http://103.146.176.133:80",
+                        "https": "https://103.146.176.133:80"
+                    }
+                    response = requests.get(url, headers=headers, proxies=proxies, timeout=10)
+                    response.raise_for_status()
 
                 soup = BeautifulSoup(response.content, 'html.parser')
 
+                # More comprehensive search across different sections
                 sections = [
                     ('latestjobs', 'div', 'latestjobs'),
                     ('resultblock', 'div', 'resultblock'),
                     ('post', 'div', 'post'),
-                    ('menu', 'div', 'menu')
+                    ('menu', 'div', 'menu'),
+                    ('posttitle', 'div', 'posttitle'),
+                    ('headline', 'div', 'headline')
                 ]
 
                 results = []
@@ -49,26 +54,35 @@ def job_search_section(job_query=None):
                     section = soup.find(tag, id=section_id) or soup.find(tag, class_=class_name)
                     if section:
                         links = section.find_all('a', href=True)
-                        results.extend(
-                            a for a in links
-                            if job_query.lower() in a.text.lower() and
-                            not any(x in a.text.lower() for x in ['answer key', 'admit card', 'syllabus'])
-                        )
+                        for a in links:
+                            link_text = re.sub(r'\s+', ' ', a.text).strip()
+                            if (job_query.lower() in link_text.lower() and
+                                not any(x in link_text.lower() for x in ['answer key', 'admit card', 'syllabus']) and
+                                len(link_text) > 5):  # Filter out very short texts
+                                results.append({
+                                    'text': link_text,
+                                    'url': a['href'] if a['href'].startswith('http') else f"https://www.sarkariresult.com{a['href']}"
+                                })
 
-                if results:
-                    st.success(f"Found {len(results)} matching jobs:")
-                    for link in results[:10]:  # Limit to 10 results
-                        link_text = re.sub(r'\s+', ' ', link.text).strip()
-                        link_url = link['href']
-                        if not link_url.startswith(('http://', 'https://')):
-                            link_url = "https://www.sarkariresult.com/" + link_url.lstrip("/")
-                        st.markdown(f"🔹 [{link_text}]({link_url})")
+                # Remove duplicates
+                unique_results = []
+                seen_urls = set()
+                for result in results:
+                    if result['url'] not in seen_urls:
+                        seen_urls.add(result['url'])
+                        unique_results.append(result)
+
+                if unique_results:
+                    st.success(f"Found {len(unique_results)} matching jobs:")
+                    for result in unique_results[:10]:  # Limit to 10 results
+                        st.markdown(f"- [{result['text']}]({result['url']})")
                 else:
-                    st.warning(f"No job openings found for '{job_query}'. Try other keywords.")
+                    st.warning("No matching jobs found. Try different keywords.")
+                    
         except requests.exceptions.RequestException as e:
-            st.error(f"Network error (possibly proxy failed or site blocked it): {e}")
+            st.error(f"Failed to connect to Sarkari Result. Error: {str(e)}")
         except Exception as e:
-            st.error(f"An error occurred: {e}")
+            st.error(f"An error occurred: {str(e)}")
 
 # --- Dashboard Page ---
 def dashboard():

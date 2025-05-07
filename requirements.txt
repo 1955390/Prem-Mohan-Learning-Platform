@@ -2,5 +2,5 @@ streamlit
 requests
 bs4 import BeautifulSoup
 re
-from PIL import Image
-from googleapiclient.discovery import build
+googleapiclient.discovery 
+build

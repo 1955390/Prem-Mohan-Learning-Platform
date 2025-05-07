@@ -56,7 +56,7 @@ def job_search_section(job_query=None):
                         
                         if not link_url.startswith(('http://', 'https://')):
                             if link_url.startswith('/'):
-                                link_url = "https://www.sarkariresult.com" + link_url
+                                link_url = "https://www.sarkariresult.com/" + link_url
                             else:
                                 link_url = "https://www.sarkariresult.com/" + link_url
                                 

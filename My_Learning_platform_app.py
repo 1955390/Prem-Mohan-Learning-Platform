@@ -7,7 +7,14 @@ from googleapiclient.discovery import build
 
 # --- Job Search Section ---
 def job_search_section(job_query=None):
-    st.subheader("\U0001F50D Government Job Search")
+    headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                  "AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/122.0.0.0 Safari/537.36"
+}
+
+response = requests.get("https://www.sarkariresult.com/", headers=headers)
+
 
     if not job_query:
         job_query = st.text_input("Enter job keyword (e.g. 'police', 'railway', '12th pass')")

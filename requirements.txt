@@ -2,5 +2,4 @@ streamlit
 requests
 BeautifulSoup
 re
-googleapiclient.discovery 
 build

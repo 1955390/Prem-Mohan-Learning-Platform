@@ -8,70 +8,27 @@ from selenium import webdriver
 # --- Job Search Section ---
 
 
+
 def job_search_section(job_query=None):
-    st.header("🔍 Sarkari Job Search")
-    
-    if not job_query:
-        st.info("Please enter a job keyword above to start searching.")
-        return
+    st.header("🔍 Sarkari Job Search (Demo Mode)")
 
-    try:
-        url = "https://www.sarkariresult.com/"
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-        }
+    mock_jobs = [
+        {"text": "UPSC NDA II Online Form 2025", "url": "https://www.sarkariresult.com/upsc/nda-ii-2025/"},
+        {"text": "SSC CHSL 2025 Online Form", "url": "https://www.sarkariresult.com/ssc/ssc-chsl-2025/"},
+        {"text": "Railway RRB ALP 2025 Vacancy", "url": "https://www.sarkariresult.com/railway/rrb-alp-2025/"}
+    ]
 
-        # Send request to Sarkari Result
-        response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status()
-
-        soup = BeautifulSoup(response.content, 'html.parser')
-
-        # Define sections to search
-        sections = [
-            ('latestjobs', 'div', 'latestjobs'),
-            ('resultblock', 'div', 'resultblock'),
-            ('post', 'div', 'post'),
-            ('menu', 'div', 'menu'),
-            ('posttitle', 'div', 'posttitle'),
-            ('headline', 'div', 'headline')
-        ]
-
-        results = []
-        for section_id, tag, class_name in sections:
-            section = soup.find(tag, id=section_id) or soup.find(tag, class_=class_name)
-            if section:
-                links = section.find_all('a', href=True)
-                for a in links:
-                    link_text = re.sub(r'\s+', ' ', a.text).strip()
-                    if (job_query.lower() in link_text.lower() and
-                        not any(x in link_text.lower() for x in ['answer key', 'admit card', 'syllabus']) and
-                        len(link_text) > 5):
-                        results.append({
-                            'text': link_text,
-                            'url': a['href'] if a['href'].startswith('http') else f"https://www.sarkariresult.com{a['href']}"
-                        })
-
-        # Remove duplicates
-        unique_results = []
-        seen_urls = set()
-        for result in results:
-            if result['url'] not in seen_urls:
-                seen_urls.add(result['url'])
-                unique_results.append(result)
-
-        # Display results
-        if unique_results:
-            st.success(f"✅ Found {len(unique_results)} matching jobs:")
-            for result in unique_results[:10]:  # show top 10 results
-                st.markdown(f"- [{result['text']}]({result['url']})")
+    if job_query:
+        filtered = [job for job in mock_jobs if job_query.lower() in job["text"].lower()]
+        if filtered:
+            st.success(f"Found {len(filtered)} job(s):")
+            for job in filtered:
+                st.markdown(f"- [{job['text']}]({job['url']})")
         else:
-            st.warning("No matching jobs found. Try different keywords.")
+            st.warning("No matching jobs found.")
+    else:
+        st.info("Enter a keyword to search job titles.")
 
-    except requests.exceptions.RequestException as e:
-        st.error(f"❌ Failed to connect to Sarkari Result. Error: {str(e)}")
-    except Exception as e:
-        st.error(f"⚠️ An unexpected error occurred: {str(e)}")
 
 # --- Dashboard Page ---
 def dashboard():

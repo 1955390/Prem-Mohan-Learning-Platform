@@ -29,7 +29,7 @@ def job_search_section(job_query=None):
                     response = requests.get("https://www.sarkariresult.com/", timeout=10)
                     print(response.status_code)
                     print(response.text)
-except requests.exceptions.RequestException as e:
+                except requests.exceptions.RequestException as e:
                     print(f"Failed to connect: {e}")
                 except:
                     # If direct request fails, try with proxies

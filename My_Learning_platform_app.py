@@ -8,7 +8,7 @@ from googleapiclient.discovery import build
 # --- Job Search Section ---
 def job_search_section(job_query=None):
     try:
-        url = "https://www.sarkariresult.com/"
+        url = "https://sarkariresult.com.cm/"
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
         }
@@ -54,7 +54,7 @@ def job_search_section(job_query=None):
                             len(link_text) > 5):  # Filter out very short texts
                             results.append({
                                 'text': link_text,
-                                'url': a['href'] if a['href'].startswith('http') else f"https://www.sarkariresult.com{a['href']}"
+                                'url': a['href'] if a['href'].startswith('http') else f"https://sarkariresult.com.cm/{a['href']}"
                             })
 
         # Remove duplicates

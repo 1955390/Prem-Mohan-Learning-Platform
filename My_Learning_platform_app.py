@@ -12,7 +12,7 @@ from selenium import webdriver
 def job_search_section(job_query=None):
     st.header("🔍 Sarkari Job Search")
 
-   mock_jobs = [
+  mock_jobs = [
     {
         "title": "UPSC NDA II Online Form 2025",
         "url": "https://www.sarkariresult.com/upsc/nda-ii-2025/",

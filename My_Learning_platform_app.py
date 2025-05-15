@@ -10,13 +10,161 @@ from selenium import webdriver
 
 
 def job_search_section(job_query=None):
-    st.header("🔍 Sarkari Job Search (Demo Mode)")
+    st.header("🔍 Sarkari Job Search")
 
-    mock_jobs = [
-        {"text": "UPSC NDA II Online Form 2025", "url": "https://www.sarkariresult.com/upsc/nda-ii-2025/"},
-        {"text": "SSC CHSL 2025 Online Form", "url": "https://www.sarkariresult.com/ssc/ssc-chsl-2025/"},
-        {"text": "Railway RRB ALP 2025 Vacancy", "url": "https://www.sarkariresult.com/railway/rrb-alp-2025/"}
-    ]
+   mock_jobs = [
+    {
+        "title": "UPSC NDA II Online Form 2025",
+        "url": "https://www.sarkariresult.com/upsc/nda-ii-2025/",
+        "notification_date": "2025-06-10",
+        "last_date_to_apply": "2025-07-01",
+        "job_type": "Defence",
+        "location": "All India",
+        "description": "Apply for NDA II 2025 Exam for admission to Army, Navy and Air Force wings.",
+        "role": "Officer (Army/Navy/Air Force)",
+        "eligibility": "12th pass (PCM for tech roles)",
+        "salary": "₹56,100 – ₹1,77,500+",
+        "age_limit": "16.5–19.5 years",
+        "exam": "NDA",
+        "type": "Armed Forces Officer"
+    },
+    {
+        "title": "SSC CHSL 2025 Online Form",
+        "url": "https://www.sarkariresult.com/ssc/ssc-chsl-2025/",
+        "notification_date": "2025-05-20",
+        "last_date_to_apply": "2025-06-15",
+        "job_type": "Staff Selection Commission",
+        "location": "All India",
+        "description": "SSC CHSL 2025 recruitment for various Group C posts. Online applications invited.",
+        "role": "LDC, DEO, Junior Assistant, etc.",
+        "eligibility": "12th pass",
+        "salary": "₹19,900 – ₹63,200",
+        "age_limit": "18–27 years",
+        "exam": "SSC CHSL",
+        "type": "Central Government Jobs"
+    },
+    {
+        "title": "Railway RRB ALP 2025 Vacancy",
+        "url": "https://www.sarkariresult.com/railway/rrb-alp-2025/",
+        "notification_date": "2025-07-05",
+        "last_date_to_apply": "2025-07-25",
+        "job_type": "Railway",
+        "location": "All India",
+        "description": "Railway RRB ALP 2025 recruitment for Assistant Loco Pilot and Technician posts.",
+        "role": "ASM, Ticket Collector, Group D, etc.",
+        "eligibility": "12th pass",
+        "salary": "₹18,000 – ₹35,000",
+        "age_limit": "18–33 years",
+        "exam": "RRB NTPC, Group D, ALP",
+        "type": "Indian Railways"
+    },
+    {
+        "title": "IBPS PO 2025 Notification",
+        "url": "https://www.sarkariresult.com/bank/ibps-po-2025/",
+        "notification_date": "2025-04-30",
+        "last_date_to_apply": "2025-05-20",
+        "job_type": "Banking",
+        "location": "All India",
+        "description": "IBPS PO 2025 recruitment for Probationary Officer posts in various banks.",
+        "role": "Clerk, Assistant, PO, Specialist Officer",
+        "eligibility": "Graduation (PO), 12th pass (Clerk)",
+        "salary": "₹20,000 – ₹45,000",
+        "age_limit": "20–30 years",
+        "exam": "SBI/IBPS Clerk & PO",
+        "type": "Public Sector Banks"
+    },
+    {
+        "title": "CTET 2025 Notification",
+        "url": "https://www.sarkariresult.com/education/ctet-2025/",
+        "notification_date": "2025-05-10",
+        "last_date_to_apply": "2025-06-05",
+        "job_type": "Education",
+        "location": "All India",
+        "description": "Central Teacher Eligibility Test (CTET) 2025 online application for teaching jobs.",
+        "role": "Primary Teacher, TGT, PGT",
+        "eligibility": "12th + Diploma (Primary), Graduation for others",
+        "salary": "₹25,000 – ₹60,000+",
+        "age_limit": "18–40 years",
+        "exam": "CTET, State TET",
+        "type": "Government Schools"
+    },
+    {
+        "title": "Delhi Police Constable Recruitment 2025",
+        "url": "https://www.sarkariresult.com/police/delhi-police-constable-2025/",
+        "notification_date": "2025-06-15",
+        "last_date_to_apply": "2025-07-10",
+        "job_type": "Police",
+        "location": "Delhi",
+        "description": "Recruitment for Constable posts in Delhi Police under SSC.",
+        "role": "Constable, Sub-Inspector (SI)",
+        "eligibility": "12th pass (Constable), Graduation (SI)",
+        "salary": "₹21,700 – ₹1,12,400",
+        "age_limit": "18–25 (Constable), 20–25 (SI)",
+        "exam": "SSC GD, State Police, UPSC CPO",
+        "type": "State & Central Police Forces"
+    },
+    {
+        "title": "India Post GDS Recruitment 2025",
+        "url": "https://www.sarkariresult.com/post/india-post-gds-2025/",
+        "notification_date": "2025-05-01",
+        "last_date_to_apply": "2025-05-30",
+        "job_type": "Post Office",
+        "location": "All India",
+        "description": "India Post GDS recruitment for Postal Assistant, Sorting Assistant, and MTS.",
+        "role": "Postal Assistant, Sorting Assistant, MTS",
+        "eligibility": "12th pass",
+        "salary": "₹18,000 – ₹40,000+",
+        "age_limit": "18–27 years",
+        "exam": "India Post Exams",
+        "type": "India Post (Central Government)"
+    },
+    {
+        "title": "Air India Cabin Crew Recruitment 2025",
+        "url": "https://www.sarkariresult.com/airlines/air-india-cabin-crew-2025/",
+        "notification_date": "2025-06-01",
+        "last_date_to_apply": "2025-06-25",
+        "job_type": "Airlines",
+        "location": "All India",
+        "description": "Recruitment for Cabin Crew and Ground Staff in Air India.",
+        "role": "Cabin Crew, Ground Staff",
+        "eligibility": "12th pass",
+        "salary": "₹25,000 – ₹50,000",
+        "age_limit": "18–27 years",
+        "exam": "Air India recruitment",
+        "type": "Public Sector (Air India)"
+    },
+    {
+        "title": "UPSC Civil Services 2025",
+        "url": "https://www.sarkariresult.com/upsc/upsc-civil-services-2025/",
+        "notification_date": "2025-02-15",
+        "last_date_to_apply": "2025-03-10",
+        "job_type": "UPSC",
+        "location": "All India",
+        "description": "UPSC Civil Services Exam for IAS, IPS, and IFS posts.",
+        "role": "IAS, IPS, IFS",
+        "eligibility": "Graduation",
+        "salary": "₹56,100 – ₹2,50,000",
+        "age_limit": "21–32 years",
+        "exam": "UPSC Civil Services, IFS",
+        "type": "Central Government Services"
+    },
+    {
+        "title": "Indian Army Soldier Recruitment 2025",
+        "url": "https://www.sarkariresult.com/army/army-soldier-2025/",
+        "notification_date": "2025-03-01",
+        "last_date_to_apply": "2025-03-25",
+        "job_type": "Defence",
+        "location": "All India",
+        "description": "Indian Army recruitment for Soldier, Airmen, and Sailor posts.",
+        "role": "Soldier, Airmen, Sailor",
+        "eligibility": "12th pass (with specific subjects for technical roles)",
+        "salary": "₹21,000 – ₹50,000+",
+        "age_limit": "16.5–23 years",
+        "exam": "NDA, other recruitment exams",
+        "type": "Indian Armed Forces"
+    }
+]
+
 
     if job_query:
         filtered = [job for job in mock_jobs if job_query.lower() in job["text"].lower()]

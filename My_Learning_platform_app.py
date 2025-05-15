@@ -26,8 +26,11 @@ def job_search_section(job_query=None):
             with st.spinner(f"Searching for '{job_query}' on Sarkari Result..."):
                 # Try without proxies first
                 try:
-                    response = requests.get(url, headers=headers, timeout=10)
-                    response.raise_for_status()
+                    response = requests.get("https://www.sarkariresult.com/", timeout=10)
+                    print(response.status_code)
+                    print(response.text)
+except requests.exceptions.RequestException as e:
+                    print(f"Failed to connect: {e}")
                 except:
                     # If direct request fails, try with proxies
                     proxies = {

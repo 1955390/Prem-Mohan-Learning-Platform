@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import re
 from PIL import Image
 from googleapiclient.discovery import build
-
+from selenium import webdriver
 # --- Job Search Section ---
 
 

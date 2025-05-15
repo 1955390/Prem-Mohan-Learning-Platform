@@ -16,6 +16,10 @@ def job_search_section(job_query=None):
         try:
             response = requests.get(url, headers=headers, timeout=10)
             response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            st.error("Could not connect to Sarkari Result. Please check your internet connection or try again later.")
+            return
+
         except requests.exceptions.RequestException:
             # If direct request fails, try with proxies
             proxies = {

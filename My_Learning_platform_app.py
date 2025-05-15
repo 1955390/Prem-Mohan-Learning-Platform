@@ -7,86 +7,71 @@ from googleapiclient.discovery import build
 
 # --- Job Search Section ---
 def job_search_section(job_query=None):
-    if not job_query:
-        job_query = st.text_input("Enter job keyword (e.g. 'police', 'railway', '12th pass')")
-
-    if st.button("Search Job") or job_query:
-        if not job_query:
-            st.warning("Please enter a keyword to search.")
-            return
+    try:
+        url = "https://www.sarkariresult.com/"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        }
 
         try:
-            url = "https://www.sarkariresult.com/"
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                              "AppleWebKit/537.36 (KHTML, like Gecko) "
-                              "Chrome/122.0.0.0 Safari/537.36"
+            response = requests.get(url, headers=headers, timeout=10)
+            response.raise_for_status()
+        except requests.exceptions.RequestException:
+            # If direct request fails, try with proxies
+            proxies = {
+                "http": "http://103.146.176.133:80",
+                "https": "http://103.146.176.133:80"  # Note: should be http for both
             }
+            response = requests.get(url, headers=headers, proxies=proxies, timeout=10)
+            response.raise_for_status()
 
-            with st.spinner(f"Searching for '{job_query}' on Sarkari Result..."):
-                # Try without proxies first
-                try:
-                    response = requests.get("https://www.sarkariresult.com/", timeout=10)
-                    print(response.status_code)
-                    print(response.text)
-                except requests.exceptions.RequestException as e:
-                    print(f"Failed to connect: {e}")
-                except:
-                    # If direct request fails, try with proxies
-                    proxies = {
-                        "http": "http://103.146.176.133:80",
-                        "https": "https://103.146.176.133:80"
-                    }
-                    response = requests.get(url, headers=headers, proxies=proxies, timeout=10)
-                    response.raise_for_status()
+        soup = BeautifulSoup(response.content, 'html.parser')
 
-                soup = BeautifulSoup(response.content, 'html.parser')
+        # More comprehensive search across different sections
+        sections = [
+            ('latestjobs', 'div', 'latestjobs'),
+            ('resultblock', 'div', 'resultblock'),
+            ('post', 'div', 'post'),
+            ('menu', 'div', 'menu'),
+            ('posttitle', 'div', 'posttitle'),
+            ('headline', 'div', 'headline')
+        ]
 
-                # More comprehensive search across different sections
-                sections = [
-                    ('latestjobs', 'div', 'latestjobs'),
-                    ('resultblock', 'div', 'resultblock'),
-                    ('post', 'div', 'post'),
-                    ('menu', 'div', 'menu'),
-                    ('posttitle', 'div', 'posttitle'),
-                    ('headline', 'div', 'headline')
-                ]
+        results = []
+        if job_query:
+            for section_id, tag, class_name in sections:
+                section = soup.find(tag, id=section_id) or soup.find(tag, class_=class_name)
+                if section:
+                    links = section.find_all('a', href=True)
+                    for a in links:
+                        link_text = re.sub(r'\s+', ' ', a.text).strip()
+                        if (job_query.lower() in link_text.lower() and
+                            not any(x in link_text.lower() for x in ['answer key', 'admit card', 'syllabus']) and
+                            len(link_text) > 5):  # Filter out very short texts
+                            results.append({
+                                'text': link_text,
+                                'url': a['href'] if a['href'].startswith('http') else f"https://www.sarkariresult.com{a['href']}"
+                            })
 
-                results = []
-                for section_id, tag, class_name in sections:
-                    section = soup.find(tag, id=section_id) or soup.find(tag, class_=class_name)
-                    if section:
-                        links = section.find_all('a', href=True)
-                        for a in links:
-                            link_text = re.sub(r'\s+', ' ', a.text).strip()
-                            if (job_query.lower() in link_text.lower() and
-                                not any(x in link_text.lower() for x in ['answer key', 'admit card', 'syllabus']) and
-                                len(link_text) > 5):  # Filter out very short texts
-                                results.append({
-                                    'text': link_text,
-                                    'url': a['href'] if a['href'].startswith('http') else f"https://www.sarkariresult.com{a['href']}"
-                                })
+        # Remove duplicates
+        unique_results = []
+        seen_urls = set()
+        for result in results:
+            if result['url'] not in seen_urls:
+                seen_urls.add(result['url'])
+                unique_results.append(result)
 
-                # Remove duplicates
-                unique_results = []
-                seen_urls = set()
-                for result in results:
-                    if result['url'] not in seen_urls:
-                        seen_urls.add(result['url'])
-                        unique_results.append(result)
+        if unique_results:
+            st.success(f"Found {len(unique_results)} matching jobs:")
+            for result in unique_results[:10]:  # Limit to 10 results
+                st.markdown(f"- [{result['text']}]({result['url']})")
+        else:
+            st.warning("No matching jobs found. Try different keywords.")
 
-                if unique_results:
-                    st.success(f"Found {len(unique_results)} matching jobs:")
-                    for result in unique_results[:10]:  # Limit to 10 results
-                        st.markdown(f"- [{result['text']}]({result['url']})")
-                else:
-                    st.warning("No matching jobs found. Try different keywords.")
-                    
-        except requests.exceptions.RequestException as e:
-            st.error(f"Failed to connect to Sarkari Result. Error: {str(e)}")
-        except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
-
+    except requests.exceptions.RequestException as e:
+        st.error(f"Failed to connect to Sarkari Result. Error: {str(e)}")
+    except Exception as e:
+        st.error(f"An unexpected error occurred: {str(e)}")
 # --- Dashboard Page ---
 def dashboard():
     st.markdown(

@@ -164,8 +164,7 @@ def job_search_section(job_query=None):
         "type": "Indian Armed Forces"
     }]
 
-
-   if job_query:
+if job_query:
     filtered = [
         job for job in mock_jobs
         if job_query.lower() in job["title"].lower() or job_query.lower() in job["description"].lower()
@@ -690,6 +689,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

@@ -165,16 +165,19 @@ def job_search_section(job_query=None):
     }]
 
 
-    if job_query:
-        filtered = [job for job in mock_jobs if job_query.lower() in job["text"].lower()]
-        if filtered:
-            st.success(f"Found {len(filtered)} job(s):")
-            for job in filtered:
-                st.markdown(f"- [{job['text']}]({job['url']})")
-        else:
-            st.warning("No matching jobs found.")
+   if job_query:
+    filtered = [
+        job for job in mock_jobs
+        if job_query.lower() in job["title"].lower() or job_query.lower() in job["description"].lower()
+    ]
+    if filtered:
+        st.success(f"Found {len(filtered)} job(s):")
+        for job in filtered:
+            st.markdown(f"- [{job['title']}]({job['url']})")
     else:
-        st.info("Enter a keyword to search job titles.")
+        st.warning("No matching jobs found.")
+else:
+    st.info("Enter a keyword to search job titles.")
 
 
 # --- Dashboard Page ---
@@ -687,6 +690,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

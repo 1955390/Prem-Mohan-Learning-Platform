@@ -12,7 +12,7 @@ from selenium import webdriver
 def job_search_section(job_query=None):
     st.header("🔍 Sarkari Job Search")
 
-  mock_jobs = [
+  mock_jobs =[
     {
         "title": "UPSC NDA II Online Form 2025",
         "url": "https://www.sarkariresult.com/upsc/nda-ii-2025/",
@@ -162,9 +162,7 @@ def job_search_section(job_query=None):
         "age_limit": "16.5–23 years",
         "exam": "NDA, other recruitment exams",
         "type": "Indian Armed Forces"
-    }
-]
-return mock_jobs
+    }]
 
 
     if job_query:
@@ -689,4 +687,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

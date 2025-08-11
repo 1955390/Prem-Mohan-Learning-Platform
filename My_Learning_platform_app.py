@@ -164,6 +164,7 @@ def job_search_section(job_query=None):
         "type": "Indian Armed Forces"
     }
 ]
+return mock_jobs
 
 
     if job_query:
@@ -688,3 +689,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

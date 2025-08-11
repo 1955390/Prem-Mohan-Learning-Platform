@@ -449,7 +449,7 @@ def search_youtube_videos(query, api_key):
 
 # --- Sidebar Learning Resources ---
 def learn_more_sidebar():
-    st.sidebar.title("Start Your Preparation with Prem Mohan NextGen \U0001F4DA")
+    st.sidebar.title("Start Preparation\U0001F4DA")
     st.sidebar.title('\U0001F680 Boost Your Knowledge')
 
     st.sidebar.subheader("\U0001F4FA Prem Mohan's YouTube Channel")
@@ -686,6 +686,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

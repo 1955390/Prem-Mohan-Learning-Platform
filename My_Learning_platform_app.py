@@ -164,8 +164,8 @@ def job_search_section(job_query=None):
         "type": "Indian Armed Forces"
     }]
 
-if job_query:
-    filtered = [
+    if job_query:
+      filtered = [
         job for job in mock_jobs
         if job_query.lower() in job["title"].lower() or job_query.lower() in job["description"].lower()
     ]
@@ -175,10 +175,7 @@ if job_query:
             st.markdown(f"- [{job['title']}]({job['url']})")
     else:
         st.warning("No matching jobs found.")
-else:
-    st.info("Enter a keyword to search job titles.")
-
-
+        
 # --- Dashboard Page ---
 def dashboard():
     st.markdown(
@@ -689,6 +686,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

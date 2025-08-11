@@ -12,37 +12,37 @@ from selenium import webdriver
 def job_search_section(job_query=None):
     st.header("🔍 Sarkari Job Search")
 
-  mock_jobs =  [
-    {
-        "title": "UPSC NDA II Online Form 2025",
-        "url": "https://www.sarkariresult.com/upsc/nda-ii-2025/",
-        "notification_date": "2025-06-10",
-        "last_date_to_apply": "2025-07-01",
-        "job_type": "Defence",
-        "location": "All India",
-        "description": "Apply for NDA II 2025 Exam for admission to Army, Navy and Air Force wings.",
-        "role": "Officer (Army/Navy/Air Force)",
-        "eligibility": "12th pass (PCM for tech roles)",
-        "salary": "₹56,100 – ₹1,77,500+",
-        "age_limit": "16.5–19.5 years",
-        "exam": "NDA",
-        "type": "Armed Forces Officer"
-    },
-    {
-        "title": "SSC CHSL 2025 Online Form",
-        "url": "https://www.sarkariresult.com/ssc/ssc-chsl-2025/",
-        "notification_date": "2025-05-20",
-        "last_date_to_apply": "2025-06-15",
-        "job_type": "Staff Selection Commission",
-        "location": "All India",
-        "description": "SSC CHSL 2025 recruitment for various Group C posts. Online applications invited.",
-        "role": "LDC, DEO, Junior Assistant, etc.",
-        "eligibility": "12th pass",
-        "salary": "₹19,900 – ₹63,200",
-        "age_limit": "18–27 years",
-        "exam": "SSC CHSL",
-        "type": "Central Government Jobs"
-    },
+    mock_jobs = [
+        {
+            "title": "UPSC NDA II Online Form 2025",
+            "url": "https://www.sarkariresult.com/upsc/nda-ii-2025/",
+            "notification_date": "2025-06-10",
+            "last_date_to_apply": "2025-07-01",
+            "job_type": "Defence",
+            "location": "All India",
+            "description": "Apply for NDA II 2025 Exam for admission to Army, Navy and Air Force wings.",
+            "role": "Officer (Army/Navy/Air Force)",
+            "eligibility": "12th pass (PCM for tech roles)",
+            "salary": "₹56,100 – ₹1,77,500+",
+            "age_limit": "16.5–19.5 years",
+            "exam": "NDA",
+            "type": "Armed Forces Officer"
+        },
+        {
+            "title": "SSC CHSL 2025 Online Form",
+            "url": "https://www.sarkariresult.com/ssc/ssc-chsl-2025/",
+            "notification_date": "2025-05-20",
+            "last_date_to_apply": "2025-06-15",
+            "job_type": "Staff Selection Commission",
+            "location": "All India",
+            "description": "SSC CHSL 2025 recruitment for various Group C posts. Online applications invited.",
+            "role": "LDC, DEO, Junior Assistant, etc.",
+            "eligibility": "12th pass",
+            "salary": "₹19,900 – ₹63,200",
+            "age_limit": "18–27 years",
+            "exam": "SSC CHSL",
+            "type": "Central Government Jobs"
+        },
     {
         "title": "Railway RRB ALP 2025 Vacancy",
         "url": "https://www.sarkariresult.com/railway/rrb-alp-2025/",
@@ -687,6 +687,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
